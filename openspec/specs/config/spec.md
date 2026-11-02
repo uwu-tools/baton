@@ -120,7 +120,7 @@ require `inventory.path`.
 
 Validation SHALL check each rollout:
 
-- rollout ids are unique, and obligation ids are unique within a
+- rollout IDs are unique, and obligation IDs are unique within a
   rollout;
 - `when.release` names a component and `when.tag` compiles;
 - `when.level` is `major`, `minor`, or `patch` (the default), and
@@ -147,12 +147,12 @@ Validation SHALL check each rollout:
 - **WHEN** `when.level: minor` and the source component sets no order
 - **THEN** validation passes
 
-### Requirement: Ids and obligations optional
+### Requirement: IDs and obligations optional
 
-Validation SHALL NOT require non-empty ids, or a rollout to have any
+Validation SHALL NOT require non-empty IDs, or a rollout to have any
 obligations.
 
-#### Scenario: Empty ids
+#### Scenario: Empty IDs
 
 - **WHEN** a rollout and its obligation both have `id: ""`
 - **THEN** validation passes
@@ -211,15 +211,15 @@ therefore be accepted.
 
 ### Requirement: Invariant and waiver references
 
-Invariant ids SHALL be unique and SHALL NOT equal any
-`<rollout>/<obligation>` id. Each waiver's `obligation` SHALL name a
-known `<rollout>/<obligation>` or invariant id. `approver` and `reason`
+Invariant IDs SHALL be unique and SHALL NOT equal any
+`<rollout>/<obligation>` ID. Each waiver's `obligation` SHALL name a
+known `<rollout>/<obligation>` or invariant ID. `approver` and `reason`
 SHALL both be non-empty, and `expires` SHALL be a `YYYY-MM-DD` date.
 Validation SHALL NOT reject an expired waiver or check `binding`.
 
-#### Scenario: Invariant id collides
+#### Scenario: Invariant ID collides
 
-- **WHEN** rollout `r` has obligation `a` and an invariant has id `r/a`
+- **WHEN** rollout `r` has obligation `a` and an invariant has ID `r/a`
 - **THEN** validation fails with `invariant "r/a": duplicate id`
 
 #### Scenario: Expired waiver

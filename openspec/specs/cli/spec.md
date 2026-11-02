@@ -186,7 +186,7 @@ Without `--json`, `plan` and `apply` SHALL print:
 - `as of <date>`;
 - per rollout, `rollout <id> <binding>: <status>`, where status is
   `complete`, `in progress`, or `not triggered`;
-- per obligation, state, age as `(<n>d)` if any, id, and evidence;
+- per obligation, state, age as `(<n>d)` if any, ID, and evidence;
 - `invariants` followed by one line per invariant, when there are any;
 - per plan item, `plan: <op> <repo> [<key>] <title>`.
 
@@ -196,20 +196,20 @@ Without `--json`, `plan` and `apply` SHALL print:
   example
 - **THEN** the output includes
   `rollout scorecard-release scorecard@v5.6.0: in progress`
-- **AND** an obligation line with state `overdue`, age `(8d)`, and id
+- **AND** an obligation line with state `overdue`, age `(8d)`, and ID
   `scorecard-release/allstar-source-updated`
 
 ### Requirement: Text report layout
 
 Rollout, `invariants`, and plan lines SHALL be indented two spaces, and
 obligation lines four. Obligation lines SHALL pad the state to 14
-columns, the age to 6, and the id to 42. Plan lines SHALL pad the
+columns, the age to 6, and the ID to 42. Plan lines SHALL pad the
 operation to 14 columns and the repository to 22.
 
 #### Scenario: Aligned columns
 
 - **WHEN** a report has `done` and `overdue (8d)` obligations
-- **THEN** their ids start in the same column
+- **THEN** their IDs start in the same column
 
 ### Requirement: Unbound rollout status
 

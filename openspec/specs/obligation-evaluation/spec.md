@@ -44,7 +44,7 @@ three cases the instance SHALL have an empty key and binding.
 
 ### Requirement: Obligation identity
 
-A rollout obligation's id SHALL be `<rollout>/<id>`. Its key SHALL be
+A rollout obligation's ID SHALL be `<rollout>/<id>`. Its key SHALL be
 `<id>@<binding>:<commit>`. An invariant's binding SHALL be `always`, and
 its key `<id>@always`. In an unbound rollout, the key SHALL be `<id>@`,
 with no binding or commit.
@@ -197,7 +197,7 @@ SHALL be `overdue` with no age, whatever its `grace`.
 ### Requirement: Waivers
 
 A waiver SHALL apply to an obligation when its `obligation` equals the
-obligation's id and its `binding` is empty or equals the binding
+obligation's ID and its `binding` is empty or equals the binding
 (`always` for invariants). It SHALL stay active through the last second
 of its `expires` date in UTC, and the first active match SHALL win.
 
