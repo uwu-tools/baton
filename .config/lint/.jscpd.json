@@ -1,0 +1,16 @@
+{
+  "threshold": 1,
+  "reporters": ["consoleFull"],
+  "ignore": [
+    ".github/workflows/**",
+    "templates/workflows/**",
+    "docs/**",
+    "mage.go",
+    "**/*_test.go",
+    "**/*fakes/**"
+  ],
+  "ignorePattern": [
+    "Copyright \\d{4} The uwu-tools Authors[\\s\\S]*?limitations under the License\\."
+  ],
+  "absolute": true
+}

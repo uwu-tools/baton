@@ -1,0 +1,3 @@
+[codespell]
+# decorder is a golangci-lint linter name.
+ignore-words-list = decorder

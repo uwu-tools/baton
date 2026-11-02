@@ -1,0 +1,23 @@
+---
+# .project/darnit.yaml - Darnit Extension
+# Extension fields for security tooling (OpenSSF Baseline, etc.)
+
+slug: baton
+project_lead: "@justaugustus"
+cncf_slack_channel: ""
+package_managers:
+  gomod: go.mod
+version: "1.0"
+controls: {}
+context:
+  has_subprojects: false
+  has_releases: true
+  is_library: false
+  has_compiled_assets: false
+  ci_provider: github
+  platform: github
+  primary_language: go
+  maintainers:
+    - "@justaugustus"
+  security_contact: See SECURITY.md
+  governance_model: meritocracy

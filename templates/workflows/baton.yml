@@ -1,0 +1,78 @@
+# Reconcile baton.yml and update issues across the project.
+#
+# Copy this file to .github/workflows/ in your <project>-baton repo.
+#
+# The schedule is authoritative: every run recomputes every obligation
+# from what it observes. workflow_dispatch only makes it look sooner.
+#
+# Preview: baton writes issues only to a sandbox owner, never to the
+# component repos. Each issue lands in <sandbox>/<repo name>, titled
+# with the repo it's meant for. Run `baton plan` to see what it would
+# do in the real repos.
+#
+# Setup:
+# 1. Create a sandbox org with repos named like each component repo
+#    and this repo.
+# 2. Create a GitHub App with Issues: read and write, and Contents:
+#    read. Install it on the sandbox org. It needs nothing else.
+# 3. Create an environment named `baton`, limited to the default branch.
+# 4. In that environment, store the sandbox org's name as the
+#    BATON_SANDBOX_OWNER variable, the App's client ID as the
+#    BATON_APP_CLIENT_ID variable, and its private key as the
+#    BATON_APP_PRIVATE_KEY secret. Only this job can read them.
+# 5. Set BATON_VERSION below to a released baton version.
+---
+name: baton
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+  # Optional: let a component's release workflow trigger a run at once.
+  # Each sender needs a credential that can dispatch to this repo, so
+  # only add it if four runs a day is too slow. See the threat model.
+  # repository_dispatch:
+  #   types: [baton-reconcile]
+
+permissions: {}
+
+concurrency:
+  group: baton
+  cancel-in-progress: false
+
+env:
+  BATON_VERSION: v0.1.0
+
+jobs:
+  reconcile:
+    name: Reconcile
+    runs-on: ubuntu-latest
+    environment: baton
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27"
+          cache: false
+      # A short-lived token scoped to what baton needs, instead of a
+      # maintainer's personal token.
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: app
+        with:
+          client-id: ${{ vars.BATON_APP_CLIENT_ID }}
+          private-key: ${{ secrets.BATON_APP_PRIVATE_KEY }}
+          owner: ${{ vars.BATON_SANDBOX_OWNER }}
+          permission-contents: read
+          permission-issues: write
+      - name: Reconcile
+        env:
+          GITHUB_TOKEN: ${{ steps.app.outputs.token }}
+          SANDBOX: ${{ vars.BATON_SANDBOX_OWNER }}
+        # go run verifies the module against the Go checksum database.
+        run: >-
+          go run "github.com/uwu-tools/baton/cmd/baton@${BATON_VERSION}"
+          apply --redirect-owner "${SANDBOX}" baton.yml

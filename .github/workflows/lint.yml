@@ -1,0 +1,51 @@
+---
+name: lint
+
+on:
+  push:
+    # Run superlinter on pushes to default branch
+    branches:
+      - main
+  # Run superlinter on pull request events
+  pull_request:
+
+# Declare default permissions as none
+permissions: {}
+
+jobs:
+  super-linter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+    steps:
+      - name: 🔒 harden runner
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: 🧹 run superlinter
+        uses: super-linter/super-linter@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: ".config/lint"
+          MARKDOWN_CONFIG_FILE: ".markdownlint.yml"
+          YAML_CONFIG_FILE: ".yamllint.yml"
+          VALIDATE_ALL_CODEBASE: false
+          MULTI_STATUS: false
+          # Biome targets JS/TS/CSS projects; this repo has none, and its
+          # default formatting conflicts with Prettier (which already covers
+          # our incidental JSON files).
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
+          # Go is linted by the dedicated ci.yml (golangci-lint) workflow.
+          VALIDATE_GO: false
+          VALIDATE_GO_MODULES: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+          # Dependency vulnerabilities are checked by govulncheck in ci.yml,
+          # which reports only what baton actually calls.
+          VALIDATE_TRIVY: false

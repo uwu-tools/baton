@@ -1,0 +1,18 @@
+---
+# .project/project.yaml - CNCF Project Configuration
+# https://github.com/cncf/automation/tree/main/utilities/dot-project
+
+name: baton
+description: Track the follow-up work a change in one repository owes the others.
+schema_version: "1.0"
+type: software
+maturity_log: []
+repositories:
+  - name: baton
+    url: https://github.com/uwu-tools/baton
+social: {}
+mailing_lists: []
+documentation:
+  support:
+    path: SUPPORT.md
+audits: []
