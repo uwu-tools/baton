@@ -1,0 +1,108 @@
+# Example baton file for OpenSSF Scorecard.
+# Types name the association types in docs/design.md.
+#
+# This example illustrates the format. Its grace periods are
+# illustrative, not Scorecard project policy, and it isn't affiliated
+# with or endorsed by OpenSSF.
+
+# The baton repo holds parent rollout issues. ossf/scorecard-baton is
+# a hypothetical home; test runs redirect it with --redirect-owner.
+home: {repo: ossf/scorecard-baton}
+
+inventory:
+  component: scorecard
+  path: security-insights.yml
+
+components:
+  scorecard: {repo: ossf/scorecard}
+  scorecard-action: {repo: ossf/scorecard-action}
+  scorecard-infra: {repo: ossf/scorecard-infra, source: tags, since: 2026-08-05}
+  scorecard-webapp: {repo: ossf/scorecard-webapp}
+  allstar: {repo: ossf/allstar}
+
+rollouts:
+  - id: scorecard-release
+    when: {release: scorecard}
+    obligations:
+      # GitHub Action users.
+      - id: action-source-updated
+        type: version-consumption
+        target: scorecard-action
+        action: Bump github.com/ossf/scorecard/v5 to {version}
+        verify: {gomod: {module: github.com/ossf/scorecard/v5}}
+        grace: 7d
+
+      - id: action-released
+        type: release-chain
+        target: scorecard-action
+        needs: [action-source-updated]
+        action: Release scorecard-action with scorecard {version}
+        verify: {release_gomod: {module: github.com/ossf/scorecard/v5}}
+        grace: 14d
+
+      # Batch pipeline and API.
+      - id: infra-source-updated
+        type: version-consumption
+        target: scorecard-infra
+        action: Bump github.com/ossf/scorecard/v5 to {version}
+        verify: {gomod: {module: github.com/ossf/scorecard/v5}}
+        grace: 7d
+
+      - id: infra-released
+        type: release-chain
+        target: scorecard-infra
+        needs: [infra-source-updated]
+        action: Tag a scorecard-infra release with scorecard {version}
+        verify: {release_gomod: {module: github.com/ossf/scorecard/v5}}
+        grace: 14d
+
+      - id: infra-deployed
+        type: merged-not-deployed
+        target: scorecard-infra
+        needs: [infra-released]
+        action: Deploy the scorecard-infra release with scorecard {version}
+        verify:
+          deployed_gomod:
+            url: https://api.scorecard.dev/version
+            field: commit
+            module: github.com/ossf/scorecard/v5
+        grace: 21d
+
+      # Allstar operators. Blocks rollout completion like the others.
+      - id: allstar-source-updated
+        type: version-consumption
+        target: allstar
+        action: Bump github.com/ossf/scorecard/v5 to {version}
+        verify: {gomod: {module: github.com/ossf/scorecard/v5}}
+        grace: 7d
+
+      - id: allstar-released
+        type: release-chain
+        target: allstar
+        needs: [allstar-source-updated]
+        action: Release Allstar with scorecard {version}
+        verify: {release_gomod: {module: github.com/ossf/scorecard/v5}}
+        grace: 30d
+
+invariants:
+  - id: infra-schema-copy
+    type: data-contract
+    target: scorecard-infra
+    action: Sync cron/internal/format/json.v2.schema with ossf/scorecard
+    verify:
+      files_equal:
+        source: {component: scorecard, path: pkg/scorecard/json.v2.schema}
+        copy: {component: scorecard-infra, path: cron/internal/format/json.v2.schema}
+
+  - id: site-install-image
+    type: docs-mirror
+    target: scorecard-webapp
+    action: Point the scorecard.dev install snippet at ghcr.io/ossf/scorecard
+    verify:
+      file_lacks:
+        path: scorecards-site/content/home.md
+        text: gcr.io/openssf/scorecard:stable
+
+# Waivers excuse an unmet obligation until they expire. Each needs an
+# approver and a reason, and goes through PR review with this file.
+waivers: []

@@ -1,0 +1,6 @@
+{
+  "threshold": 1,
+  "reporters": ["consoleFull"],
+  "ignore": [".github/workflows/**", "templates/workflows/**", "**/*_test.go", "**/*fakes/**"],
+  "absolute": true
+}

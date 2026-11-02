@@ -1,0 +1,28 @@
+# Go build output
+/baton
+/bin/
+/dist/
+*.test
+*.out
+coverage.*
+
+# Editor / OS cruft
+.DS_Store
+*.swp
+*~
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+.secret*
+*.secrets
+
+# Cloud provider credentials
+.aws/credentials
+.gcp/credentials.json
+.azure/credentials
