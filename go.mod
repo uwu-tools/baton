@@ -12,7 +12,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/uwu-tools/magex v0.10.1
 	golang.org/x/mod v0.42.0
-	sigs.k8s.io/release-sdk v0.13.0
+	sigs.k8s.io/release-sdk v0.13.1
 	sigs.k8s.io/release-utils v0.12.5
 	sigs.k8s.io/yaml v1.6.0
 )
@@ -60,7 +60,7 @@ require (
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
-	golang.org/x/tools v0.51.0 // indirect
+	golang.org/x/tools v0.52.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	k8s.io/utils v0.0.0-20260626114624-be93311217bd // indirect
 )
